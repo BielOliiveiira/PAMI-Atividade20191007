@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-public class MainActivity extends AppCompatActivity implements CustomDialog.ItemListener,
+public class    MainActivity extends AppCompatActivity implements CustomDialog.ItemListener,
         AdapterView.OnItemLongClickListener, PopupMenu.OnMenuItemClickListener {
 
     private boolean insertMode;
@@ -62,19 +62,36 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Item
 
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         PopupMenu popup = new PopupMenu(this, view);
         popup.inflate(R.menu.menu1);
+        popup.setOnMenuItemClickListener(this);
         popup.show();
 
-        return false;
+        return true;
     }
 
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        adapter.removeItem(selectedItem);
-        return false;
+        if(menuItem.getItemId() == R.id.excluir) {
+
+            adapter.removeItem(selectedItem);
+
+            insertMode = false;
+            return true;
+        }
+        else if(menuItem.getItemId() == R.id.editar){
+
+            CustomDialog dialog = new CustomDialog(this);
+            dialog.show(getFragmentManager(), "editar");
+
+            insertMode = false;
+            return true;
+        }
+        else{
+            return super.onOptionsItemSelected(menuItem);
+        }
     }
 }
